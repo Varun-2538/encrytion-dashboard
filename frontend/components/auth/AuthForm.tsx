@@ -87,8 +87,8 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           }
         }
       }
-    } catch (err: any) {
-      setError(err.message || 'An error occurred during authentication');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred during authentication');
     } finally {
       setIsLoading(false);
     }

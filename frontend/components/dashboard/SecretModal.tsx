@@ -67,8 +67,8 @@ export const SecretModal: React.FC<SecretModalProps> = ({
     try {
       await onSave(content, secret?.id);
       handleClose();
-    } catch (err: any) {
-      setError(err.message || 'Failed to save secret');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to save secret');
     } finally {
       setIsSaving(false);
     }

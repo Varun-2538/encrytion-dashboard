@@ -13,14 +13,10 @@ export default function HomePage() {
   const router = useRouter();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-  useEffect(() => {
-    checkAuthStatus();
-  }, []);
-
   /**
    * Checks if user is already authenticated
    */
-  const checkAuthStatus = async () => {
+  const checkAuthStatus = React.useCallback(async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
 
@@ -32,7 +28,11 @@ export default function HomePage() {
     } finally {
       setIsCheckingAuth(false);
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, [checkAuthStatus]);
 
   /**
    * Handles successful authentication

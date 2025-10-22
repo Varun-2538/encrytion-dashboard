@@ -27,14 +27,24 @@ export default function DashboardPage() {
     mode: 'create'
   });
 
-  useEffect(() => {
-    initializeDashboard();
+  /**
+   * Loads all secrets from the API
+   */
+  const loadSecrets = React.useCallback(async () => {
+    try {
+      setError(null);
+      const data = await fetchSecrets();
+      setSecrets(data);
+    } catch (error) {
+      console.error('Error loading secrets:', error);
+      setError(error instanceof Error ? error.message : 'Failed to load secrets');
+    }
   }, []);
 
   /**
    * Initializes dashboard by checking auth and loading secrets
    */
-  const initializeDashboard = async () => {
+  const initializeDashboard = React.useCallback(async () => {
     try {
       // Check authentication
       const { data: { session } } = await supabase.auth.getSession();
@@ -54,21 +64,11 @@ export default function DashboardPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [router, loadSecrets]);
 
-  /**
-   * Loads all secrets from the API
-   */
-  const loadSecrets = async () => {
-    try {
-      setError(null);
-      const data = await fetchSecrets();
-      setSecrets(data);
-    } catch (error: any) {
-      console.error('Error loading secrets:', error);
-      setError(error.message || 'Failed to load secrets');
-    }
-  };
+  useEffect(() => {
+    initializeDashboard();
+  }, [initializeDashboard]);
 
   /**
    * Handles user logout
@@ -130,8 +130,8 @@ export default function DashboardPage() {
 
       // Reload secrets
       await loadSecrets();
-    } catch (error: any) {
-      throw new Error(error.message || 'Failed to save secret');
+    } catch (error) {
+      throw new Error(error instanceof Error ? error.message : 'Failed to save secret');
     }
   };
 
@@ -149,9 +149,9 @@ export default function DashboardPage() {
       setError(null);
       await deleteSecret(id);
       await loadSecrets();
-    } catch (error: any) {
+    } catch (error) {
       console.error('Error deleting secret:', error);
-      setError(error.message || 'Failed to delete secret');
+      setError(error instanceof Error ? error.message : 'Failed to delete secret');
     }
   };
 
