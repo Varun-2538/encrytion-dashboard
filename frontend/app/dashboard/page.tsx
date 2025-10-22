@@ -11,10 +11,6 @@ import { Button } from '@/components/ui/Button';
 import type { Secret, SecretModalState } from '@/types';
 import { Plus, AlertCircle } from 'lucide-react';
 
-/**
- * Dashboard page - Main secrets management interface
- * Protected route - requires authentication
- */
 export default function DashboardPage() {
   const router = useRouter();
   const [user, setUser] = useState<{ email: string } | null>(null);
@@ -27,9 +23,7 @@ export default function DashboardPage() {
     mode: 'create'
   });
 
-  /**
-   * Loads all secrets from the API
-   */
+  
   const loadSecrets = React.useCallback(async () => {
     try {
       setError(null);
@@ -41,12 +35,9 @@ export default function DashboardPage() {
     }
   }, []);
 
-  /**
-   * Initializes dashboard by checking auth and loading secrets
-   */
+  
   const initializeDashboard = React.useCallback(async () => {
     try {
-      // Check authentication
       const { data: { session } } = await supabase.auth.getSession();
 
       if (!session) {
@@ -70,9 +61,7 @@ export default function DashboardPage() {
     initializeDashboard();
   }, [initializeDashboard]);
 
-  /**
-   * Handles user logout
-   */
+  
   const handleLogout = async () => {
     setIsLoggingOut(true);
     try {
@@ -86,9 +75,7 @@ export default function DashboardPage() {
     }
   };
 
-  /**
-   * Opens modal for creating a new secret
-   */
+  
   const handleAddSecret = () => {
     setModalState({
       isOpen: true,
@@ -96,9 +83,7 @@ export default function DashboardPage() {
     });
   };
 
-  /**
-   * Opens modal for editing an existing secret
-   */
+  
   const handleEditSecret = (secret: Secret) => {
     setModalState({
       isOpen: true,
@@ -107,9 +92,7 @@ export default function DashboardPage() {
     });
   };
 
-  /**
-   * Closes the modal
-   */
+  
   const handleCloseModal = () => {
     setModalState({
       isOpen: false,
@@ -117,9 +100,7 @@ export default function DashboardPage() {
     });
   };
 
-  /**
-   * Saves a secret (create or update)
-   */
+  
   const handleSaveSecret = async (content: string, secretId?: string) => {
     try {
       if (modalState.mode === 'edit' && secretId) {
@@ -135,9 +116,7 @@ export default function DashboardPage() {
     }
   };
 
-  /**
-   * Deletes a secret with confirmation
-   */
+  
   const handleDeleteSecret = async (id: string) => {
     const confirmed = window.confirm(
       'Are you sure you want to delete this secret? This action cannot be undone.'
@@ -155,7 +134,6 @@ export default function DashboardPage() {
     }
   };
 
-  // Loading state
   if (isLoading || !user) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">

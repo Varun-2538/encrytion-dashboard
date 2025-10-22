@@ -7,17 +7,8 @@ import type {
   UpdateSecretRequest
 } from '@/types';
 
-/**
- * API client for backend communication
- * Handles authentication and request/response formatting
- */
-
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-/**
- * Creates an axios instance with authentication headers
- * @returns Axios instance configured with auth token
- */
 const getAuthenticatedClient = async () => {
   const { data: { session } } = await supabase.auth.getSession();
 
@@ -29,23 +20,27 @@ const getAuthenticatedClient = async () => {
     baseURL: API_URL,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.access_token}`
+      'Authorization': `Bearer ${session.access_token}`,
+      'ngrok-skip-browser-warning': 'true'
     }
   });
 };
 
-/**
- * Handles API errors and formats them consistently
- * @param error - Axios error object
- * @returns Formatted error message
- */
 const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
-    const axiosError = error as AxiosError<ApiResponse<unknown>>;
+    const axiosError = error as AxiosError<any>;
 
     if (axiosError.response?.data) {
       const data = axiosError.response.data;
-      if ('error' in data) {
+
+      if (typeof data === 'string') {
+        if (data.includes('<!DOCTYPE html>')) {
+          return 'Backend connection error. Please check if the API server is running.';
+        }
+        return data;
+      }
+
+      if (typeof data === 'object' && data !== null && 'error' in data) {
         return data.error;
       }
     }
@@ -62,11 +57,6 @@ const handleApiError = (error: unknown): string => {
   return 'An unexpected error occurred';
 };
 
-/**
- * Fetches all secrets for the authenticated user
- * @returns Array of secrets
- * @throws Error if request fails
- */
 export const fetchSecrets = async (): Promise<Secret[]> => {
   try {
     const client = await getAuthenticatedClient();
@@ -82,12 +72,6 @@ export const fetchSecrets = async (): Promise<Secret[]> => {
   }
 };
 
-/**
- * Creates a new secret
- * @param request - Secret content
- * @returns Created secret
- * @throws Error if request fails
- */
 export const createSecret = async (request: CreateSecretRequest): Promise<Secret> => {
   try {
     const client = await getAuthenticatedClient();
@@ -103,13 +87,6 @@ export const createSecret = async (request: CreateSecretRequest): Promise<Secret
   }
 };
 
-/**
- * Updates an existing secret
- * @param id - Secret ID
- * @param request - Updated secret content
- * @returns Updated secret
- * @throws Error if request fails
- */
 export const updateSecret = async (
   id: string,
   request: UpdateSecretRequest
@@ -128,11 +105,6 @@ export const updateSecret = async (
   }
 };
 
-/**
- * Deletes a secret
- * @param id - Secret ID
- * @throws Error if request fails
- */
 export const deleteSecret = async (id: string): Promise<void> => {
   try {
     const client = await getAuthenticatedClient();

@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
 
-/**
- * Modal component props
- */
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -12,9 +9,6 @@ interface ModalProps {
   maxWidth?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
-/**
- * Reusable modal component with backdrop and animations
- */
 export const Modal: React.FC<ModalProps> = ({
   isOpen,
   onClose,

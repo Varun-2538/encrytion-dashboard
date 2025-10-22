@@ -5,17 +5,10 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { AuthForm } from '@/components/auth/AuthForm';
 
-/**
- * Home page - Login/Register
- * Redirects to dashboard if already authenticated
- */
 export default function HomePage() {
   const router = useRouter();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
-  /**
-   * Checks if user is already authenticated
-   */
   const checkAuthStatus = React.useCallback(async () => {
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -34,9 +27,6 @@ export default function HomePage() {
     checkAuthStatus();
   }, [checkAuthStatus]);
 
-  /**
-   * Handles successful authentication
-   */
   const handleAuthSuccess = () => {
     router.push('/dashboard');
   };

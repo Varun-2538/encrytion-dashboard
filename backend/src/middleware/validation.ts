@@ -2,14 +2,6 @@ import { Request, Response, NextFunction } from 'express';
 import { body, param, validationResult, ValidationChain } from 'express-validator';
 import { logWarn } from '../utils/logger';
 
-/**
- * Validation middleware for request data
- * Uses express-validator for input validation
- */
-
-/**
- * Handles validation results and returns errors if any
- */
 export const handleValidationErrors = (
   req: Request,
   res: Response,
@@ -36,9 +28,6 @@ export const handleValidationErrors = (
   next();
 };
 
-/**
- * Validation rules for creating a new secret
- */
 export const validateCreateSecret: ValidationChain[] = [
   body('content')
     .trim()
@@ -48,9 +37,6 @@ export const validateCreateSecret: ValidationChain[] = [
     .withMessage('Secret content must be between 1 and 10000 characters')
 ];
 
-/**
- * Validation rules for updating a secret
- */
 export const validateUpdateSecret: ValidationChain[] = [
   param('id')
     .trim()
@@ -66,9 +52,6 @@ export const validateUpdateSecret: ValidationChain[] = [
     .withMessage('Secret content must be between 1 and 10000 characters')
 ];
 
-/**
- * Validation rules for deleting a secret
- */
 export const validateDeleteSecret: ValidationChain[] = [
   param('id')
     .trim()
@@ -78,9 +61,6 @@ export const validateDeleteSecret: ValidationChain[] = [
     .withMessage('Secret ID must be a valid UUID')
 ];
 
-/**
- * Validation rules for getting a single secret
- */
 export const validateGetSecret: ValidationChain[] = [
   param('id')
     .trim()

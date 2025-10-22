@@ -17,11 +17,6 @@ import {
 
 const router = express.Router();
 
-/**
- * Secrets routes
- * All routes require authentication
- */
-
 // Get all secrets for authenticated user
 router.get('/', authenticate, getAllSecrets);
 

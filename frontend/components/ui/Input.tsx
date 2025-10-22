@@ -1,17 +1,11 @@
 import React from 'react';
 
-/**
- * Input component props
- */
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
   error?: string;
   helperText?: string;
 }
 
-/**
- * Reusable input component with label and error handling
- */
 export const Input: React.FC<InputProps> = ({
   label,
   error,

@@ -7,17 +7,27 @@ import cors from 'cors';
 import secretsRouter from './routes/secrets';
 import { logInfo, logError } from './utils/logger';
 
-// Initialize Express app
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-/**
- * Middleware Configuration
- */
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:5173',
+  'https://encrytion-dashboard.vercel.app'
+];
 
-// CORS configuration
+if (process.env.FRONTEND_URL) {
+  allowedOrigins.push(process.env.FRONTEND_URL);
+}
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };
@@ -33,10 +43,6 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   logInfo('Server', `${req.method} ${req.path} - ${req.ip}`);
   next();
 });
-
-/**
- * Routes
- */
 
 // Health check endpoint
 app.get('/health', (req: Request, res: Response) => {
@@ -58,9 +64,6 @@ app.use((req: Request, res: Response) => {
   });
 });
 
-/**
- * Global Error Handler
- */
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logError('Server', `Unhandled error: ${err.message}`, err);
 
@@ -72,12 +75,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-/**
- * Server Startup
- */
 const startServer = (): void => {
   try {
-    // Validate required environment variables
     const requiredEnvVars = [
       'SUPABASE_URL',
       'SUPABASE_SERVICE_KEY',

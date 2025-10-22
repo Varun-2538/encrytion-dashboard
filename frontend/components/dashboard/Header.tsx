@@ -4,19 +4,12 @@ import React from 'react';
 import { LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
-/**
- * Header component props
- */
 interface HeaderProps {
   userEmail: string;
   onLogout: () => void;
   isLoggingOut?: boolean;
 }
 
-/**
- * Dashboard header component
- * Displays user email and logout functionality
- */
 export const Header: React.FC<HeaderProps> = ({
   userEmail,
   onLogout,

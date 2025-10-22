@@ -7,9 +7,6 @@ import { TextArea } from '@/components/ui/TextArea';
 import type { Secret } from '@/types';
 import { Shield } from 'lucide-react';
 
-/**
- * SecretModal component props
- */
 interface SecretModalProps {
   isOpen: boolean;
   mode: 'create' | 'edit';
@@ -18,9 +15,6 @@ interface SecretModalProps {
   onSave: (content: string, secretId?: string) => Promise<void>;
 }
 
-/**
- * Modal component for creating and editing secrets
- */
 export const SecretModal: React.FC<SecretModalProps> = ({
   isOpen,
   mode,
@@ -44,14 +38,11 @@ export const SecretModal: React.FC<SecretModalProps> = ({
     }
   }, [isOpen, mode, secret]);
 
-  /**
-   * Handles form submission
-   */
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
 
-    // Validation
     if (!content.trim()) {
       setError('Secret content cannot be empty');
       return;
@@ -74,9 +65,7 @@ export const SecretModal: React.FC<SecretModalProps> = ({
     }
   };
 
-  /**
-   * Handles modal close
-   */
+  
   const handleClose = () => {
     if (!isSaving) {
       setContent('');

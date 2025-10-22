@@ -4,26 +4,16 @@ import encryptionService from '../services/encryptionService';
 import { logInfo, logError, logDebug, logWarn } from '../utils/logger';
 import { AuthenticatedRequest, SecretRecord, SecretResponse } from '../types';
 
-/**
- * Controller for managing secrets CRUD operations
- * Handles encryption/decryption and database interactions
- */
-
-/**
- * Get all secrets for the authenticated user
- * Secrets are returned decrypted
- */
 export const getAllSecrets = async (
   req: AuthenticatedRequest,
   res: Response
 ): Promise<void> => {
   try {
     const userId = req.user.id;
-    const supabase = supabaseClient.getClient();
 
     logDebug('SecretsController', `Fetching secrets for user: ${userId}`);
 
-    const { data: secrets, error } = await supabase
+    const { data: secrets, error } = await supabaseClient
       .from('secrets')
       .select('id, encrypted_content, iv, auth_tag, created_at, updated_at')
       .eq('user_id', userId)
@@ -39,7 +29,6 @@ export const getAllSecrets = async (
       return;
     }
 
-    // Decrypt secrets for the response
     const decryptedSecrets: SecretResponse[] = (secrets || []).map(secret => {
       try {
         const decryptedContent = encryptionService.decrypt(
@@ -82,9 +71,6 @@ export const getAllSecrets = async (
   }
 };
 
-/**
- * Get a single secret by ID
- */
 export const getSecretById = async (
   req: AuthenticatedRequest,
   res: Response
@@ -92,11 +78,10 @@ export const getSecretById = async (
   try {
     const userId = req.user.id;
     const secretId = req.params.id;
-    const supabase = supabaseClient.getClient();
 
     logDebug('SecretsController', `Fetching secret ${secretId} for user ${userId}`);
 
-    const { data: secret, error } = await supabase
+    const { data: secret, error } = await supabaseClient
       .from('secrets')
       .select('id, encrypted_content, iv, auth_tag, created_at, updated_at')
       .eq('id', secretId)
@@ -137,9 +122,6 @@ export const getSecretById = async (
   }
 };
 
-/**
- * Create a new secret
- */
 export const createSecret = async (
   req: AuthenticatedRequest,
   res: Response
@@ -147,15 +129,12 @@ export const createSecret = async (
   try {
     const userId = req.user.id;
     const { content } = req.body;
-    const supabase = supabaseClient.getClient();
 
     logDebug('SecretsController', `Creating new secret for user ${userId}`);
 
-    // Encrypt the secret content
     const { encryptedContent, iv, authTag } = encryptionService.encrypt(content);
 
-    // Store in database
-    const { data: newSecret, error } = await supabase
+    const { data: newSecret, error } = await supabaseClient
       .from('secrets')
       .insert([
         {
@@ -199,9 +178,6 @@ export const createSecret = async (
   }
 };
 
-/**
- * Update an existing secret
- */
 export const updateSecret = async (
   req: AuthenticatedRequest,
   res: Response
@@ -210,12 +186,10 @@ export const updateSecret = async (
     const userId = req.user.id;
     const secretId = req.params.id;
     const { content } = req.body;
-    const supabase = supabaseClient.getClient();
 
     logDebug('SecretsController', `Updating secret ${secretId} for user ${userId}`);
 
-    // First check if secret exists and belongs to user
-    const { data: existingSecret, error: fetchError } = await supabase
+    const { data: existingSecret, error: fetchError } = await supabaseClient
       .from('secrets')
       .select('id')
       .eq('id', secretId)
@@ -231,11 +205,9 @@ export const updateSecret = async (
       return;
     }
 
-    // Encrypt the new content
     const { encryptedContent, iv, authTag } = encryptionService.encrypt(content);
 
-    // Update the secret
-    const { data: updatedSecret, error: updateError } = await supabase
+    const { data: updatedSecret, error: updateError } = await supabaseClient
       .from('secrets')
       .update({
         encrypted_content: encryptedContent,
@@ -279,9 +251,6 @@ export const updateSecret = async (
   }
 };
 
-/**
- * Delete a secret
- */
 export const deleteSecret = async (
   req: AuthenticatedRequest,
   res: Response
@@ -289,11 +258,10 @@ export const deleteSecret = async (
   try {
     const userId = req.user.id;
     const secretId = req.params.id;
-    const supabase = supabaseClient.getClient();
 
     logDebug('SecretsController', `Deleting secret ${secretId} for user ${userId}`);
 
-    const { error } = await supabase
+    const { error } = await supabaseClient
       .from('secrets')
       .delete()
       .eq('id', secretId)

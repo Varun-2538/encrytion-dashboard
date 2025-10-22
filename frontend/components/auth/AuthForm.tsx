@@ -5,17 +5,10 @@ import { supabase } from '@/lib/supabase';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 
-/**
- * AuthForm component props
- */
 interface AuthFormProps {
   onSuccess: () => void;
 }
 
-/**
- * Authentication form component for login and registration
- * Handles both login and signup with email/password
- */
 export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
@@ -25,15 +18,12 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  /**
-   * Handles form submission for login or signup
-   */
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setSuccessMessage(null);
 
-    // Validation
     if (!email || !password) {
       setError('Please fill in all fields');
       return;
@@ -53,7 +43,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
 
     try {
       if (isLogin) {
-        // Login
         const { data, error: signInError } = await supabase.auth.signInWithPassword({
           email,
           password
@@ -65,7 +54,6 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           onSuccess();
         }
       } else {
-        // Sign up
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password
@@ -94,9 +82,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
     }
   };
 
-  /**
-   * Toggles between login and signup mode
-   */
+  
   const toggleMode = () => {
     setIsLogin(!isLogin);
     setError(null);

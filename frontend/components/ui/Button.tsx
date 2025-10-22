@@ -1,8 +1,5 @@
 import React from 'react';
 
-/**
- * Button component props
- */
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'danger' | 'ghost';
   size?: 'sm' | 'md' | 'lg';
@@ -10,9 +7,6 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
 }
 
-/**
- * Reusable button component with variants and sizes
- */
 export const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',

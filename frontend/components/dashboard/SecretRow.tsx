@@ -5,19 +5,12 @@ import { Eye, EyeOff, Edit2, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import type { Secret } from '@/types';
 
-/**
- * SecretRow component props
- */
 interface SecretRowProps {
   secret: Secret;
   onEdit: (secret: Secret) => void;
   onDelete: (id: string) => void;
 }
 
-/**
- * Individual secret row component
- * Displays secret with toggle visibility, edit, and delete functionality
- */
 export const SecretRow: React.FC<SecretRowProps> = ({
   secret,
   onEdit,
@@ -25,9 +18,7 @@ export const SecretRow: React.FC<SecretRowProps> = ({
 }) => {
   const [isRevealed, setIsRevealed] = useState(false);
 
-  /**
-   * Formats date to readable string
-   */
+  
   const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -39,9 +30,7 @@ export const SecretRow: React.FC<SecretRowProps> = ({
     });
   };
 
-  /**
-   * Masks the secret content
-   */
+  
   const getMaskedContent = (): string => {
     return '•'.repeat(Math.min(secret.content.length, 40));
   };

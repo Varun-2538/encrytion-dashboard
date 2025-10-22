@@ -5,9 +5,6 @@ import { SecretRow } from './SecretRow';
 import type { Secret } from '@/types';
 import { Lock } from 'lucide-react';
 
-/**
- * SecretsList component props
- */
 interface SecretsListProps {
   secrets: Secret[];
   onEdit: (secret: Secret) => void;
@@ -15,10 +12,6 @@ interface SecretsListProps {
   isLoading?: boolean;
 }
 
-/**
- * Secrets list component
- * Displays all secrets in a list or shows empty state
- */
 export const SecretsList: React.FC<SecretsListProps> = ({
   secrets,
   onEdit,

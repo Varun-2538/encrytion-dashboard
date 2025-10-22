@@ -1,17 +1,11 @@
 import React from 'react';
 
-/**
- * TextArea component props
- */
 interface TextAreaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   error?: string;
   helperText?: string;
 }
 
-/**
- * Reusable textarea component with label and error handling
- */
 export const TextArea: React.FC<TextAreaProps> = ({
   label,
   error,
