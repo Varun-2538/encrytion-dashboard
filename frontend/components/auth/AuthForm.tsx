@@ -54,9 +54,13 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
           onSuccess();
         }
       } else {
+        const redirectUrl = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
-          password
+          password,
+          options: {
+            emailRedirectTo: `${redirectUrl}/dashboard`
+          }
         });
 
         if (signUpError) throw signUpError;
