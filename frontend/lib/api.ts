@@ -28,7 +28,7 @@ const getAuthenticatedClient = async () => {
 
 const handleApiError = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
-    const axiosError = error as AxiosError<any>;
+    const axiosError = error as AxiosError<ApiResponse<unknown> | string>;
 
     if (axiosError.response?.data) {
       const data = axiosError.response.data;
