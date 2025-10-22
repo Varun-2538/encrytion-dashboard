@@ -92,9 +92,9 @@ export const SecretModal: React.FC<SecretModalProps> = ({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Info Banner */}
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 flex items-start gap-2">
-          <Shield size={18} className="text-blue-600 mt-0.5 flex-shrink-0" />
-          <p className="text-sm text-blue-800">
+        <div className="bg-gray-100 border border-gray-300 rounded-md p-3 flex items-start gap-2">
+          <Shield size={18} className="text-black mt-0.5 flex-shrink-0" />
+          <p className="text-sm text-gray-700">
             Secrets are encrypted using AES-256-GCM before being stored in the database.
             Only you can decrypt and view your secrets.
           </p>
@@ -102,8 +102,8 @@ export const SecretModal: React.FC<SecretModalProps> = ({
 
         {/* Error Message */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="bg-gray-100 border border-gray-300 rounded-md p-3">
+            <p className="text-sm text-black">{error}</p>
           </div>
         )}
 

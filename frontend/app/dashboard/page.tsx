@@ -135,9 +135,9 @@ export default function DashboardPage() {
 
   if (isLoading || !user) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto" />
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-black mx-auto" />
           <p className="mt-4 text-gray-600">Loading dashboard...</p>
         </div>
       </div>
@@ -145,7 +145,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
       <Header
         userEmail={user.email}
@@ -157,14 +157,14 @@ export default function DashboardPage() {
       <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Error Banner */}
         {error && (
-          <div className="mb-6 bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3">
-            <AlertCircle size={20} className="text-red-600 flex-shrink-0 mt-0.5" />
+          <div className="mb-6 bg-gray-100 border border-gray-300 rounded-md p-4 flex items-start gap-3">
+            <AlertCircle size={20} className="text-black flex-shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm text-red-800">{error}</p>
+              <p className="text-sm text-black">{error}</p>
             </div>
             <button
               onClick={() => setError(null)}
-              className="text-red-600 hover:text-red-800"
+              className="text-black hover:text-gray-600"
             >
               ✕
             </button>
