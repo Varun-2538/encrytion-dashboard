@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '@/components/ui/Modal';
 import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import { TextArea } from '@/components/ui/TextArea';
 import type { Secret } from '@/types';
 import { Shield } from 'lucide-react';
@@ -12,7 +13,7 @@ interface SecretModalProps {
   mode: 'create' | 'edit';
   secret?: Secret;
   onClose: () => void;
-  onSave: (content: string, secretId?: string) => Promise<void>;
+  onSave: (name: string, content: string, secretId?: string) => Promise<void>;
 }
 
 export const SecretModal: React.FC<SecretModalProps> = ({
@@ -22,26 +23,33 @@ export const SecretModal: React.FC<SecretModalProps> = ({
   onClose,
   onSave
 }) => {
+  const [name, setName] = useState('');
   const [content, setContent] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Reset form when modal opens/closes or mode changes
   useEffect(() => {
     if (isOpen) {
       if (mode === 'edit' && secret) {
+        setName(secret.name);
         setContent(secret.content);
       } else {
+        setName('');
         setContent('');
       }
       setError(null);
     }
   }, [isOpen, mode, secret]);
 
-  
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!name.trim()) {
+      setError('Secret name cannot be empty');
+      return;
+    }
 
     if (!content.trim()) {
       setError('Secret content cannot be empty');
@@ -56,7 +64,7 @@ export const SecretModal: React.FC<SecretModalProps> = ({
     setIsSaving(true);
 
     try {
-      await onSave(content, secret?.id);
+      await onSave(name, content, secret?.id);
       handleClose();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to save secret');
@@ -65,9 +73,10 @@ export const SecretModal: React.FC<SecretModalProps> = ({
     }
   };
 
-  
+
   const handleClose = () => {
     if (!isSaving) {
+      setName('');
       setContent('');
       setError(null);
       onClose();
@@ -97,6 +106,16 @@ export const SecretModal: React.FC<SecretModalProps> = ({
             <p className="text-sm text-red-600">{error}</p>
           </div>
         )}
+
+        {/* Name Input */}
+        <Input
+          label="Secret Name"
+          placeholder="e.g., AWS API Key, Database Password"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          disabled={isSaving}
+          required
+        />
 
         {/* Content Input */}
         <TextArea

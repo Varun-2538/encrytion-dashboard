@@ -49,10 +49,11 @@ export const SecretsList: React.FC<SecretsListProps> = ({
 
   return (
     <div className="space-y-3">
-      {secrets.map((secret) => (
+      {secrets.map((secret, index) => (
         <SecretRow
           key={secret.id}
           secret={secret}
+          index={index + 1}
           onEdit={onEdit}
           onDelete={onDelete}
         />

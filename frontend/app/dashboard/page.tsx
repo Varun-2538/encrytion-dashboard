@@ -100,16 +100,15 @@ export default function DashboardPage() {
     });
   };
 
-  
-  const handleSaveSecret = async (content: string, secretId?: string) => {
+
+  const handleSaveSecret = async (name: string, content: string, secretId?: string) => {
     try {
       if (modalState.mode === 'edit' && secretId) {
-        await updateSecret(secretId, { content });
+        await updateSecret(secretId, { name, content });
       } else {
-        await createSecret({ content });
+        await createSecret({ name, content });
       }
 
-      // Reload secrets
       await loadSecrets();
     } catch (error) {
       throw new Error(error instanceof Error ? error.message : 'Failed to save secret');

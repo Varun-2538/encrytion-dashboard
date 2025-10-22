@@ -7,12 +7,14 @@ import type { Secret } from '@/types';
 
 interface SecretRowProps {
   secret: Secret;
+  index: number;
   onEdit: (secret: Secret) => void;
   onDelete: (id: string) => void;
 }
 
 export const SecretRow: React.FC<SecretRowProps> = ({
   secret,
+  index,
   onEdit,
   onDelete
 }) => {
@@ -40,7 +42,13 @@ export const SecretRow: React.FC<SecretRowProps> = ({
       <div className="flex items-start justify-between gap-4">
         {/* Content Section */}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-3 mb-2">
+            <span className="text-sm font-semibold text-gray-700 bg-gray-100 px-2 py-1 rounded">
+              #{index}
+            </span>
+            <h3 className="text-base font-medium text-gray-900 flex-1">
+              {secret.name}
+            </h3>
             <button
               onClick={() => setIsRevealed(!isRevealed)}
               className="text-gray-500 hover:text-gray-700 transition-colors"
@@ -48,21 +56,21 @@ export const SecretRow: React.FC<SecretRowProps> = ({
             >
               {isRevealed ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
-            <div className="flex-1 min-w-0">
-              {isRevealed ? (
-                <p className="text-sm text-gray-900 break-words whitespace-pre-wrap">
-                  {secret.content}
-                </p>
-              ) : (
-                <p className="text-sm text-gray-500 font-mono tracking-wider">
-                  {getMaskedContent()}
-                </p>
-              )}
-            </div>
+          </div>
+          <div className="ml-0">
+            {isRevealed ? (
+              <p className="text-sm text-gray-900 break-words whitespace-pre-wrap bg-gray-50 p-3 rounded border border-gray-200">
+                {secret.content}
+              </p>
+            ) : (
+              <p className="text-sm text-gray-500 font-mono tracking-wider">
+                {getMaskedContent()}
+              </p>
+            )}
           </div>
 
           {/* Metadata */}
-          <div className="flex items-center gap-4 text-xs text-gray-500">
+          <div className="flex items-center gap-4 text-xs text-gray-500 mt-2">
             <span>Created: {formatDate(secret.createdAt)}</span>
             {secret.updatedAt !== secret.createdAt && (
               <span>Updated: {formatDate(secret.updatedAt)}</span>

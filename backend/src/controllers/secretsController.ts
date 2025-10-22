@@ -15,7 +15,7 @@ export const getAllSecrets = async (
 
     const { data: secrets, error } = await supabaseClient
       .from('secrets')
-      .select('id, encrypted_content, iv, auth_tag, created_at, updated_at')
+      .select('id, name, encrypted_content, iv, auth_tag, created_at, updated_at')
       .eq('user_id', userId)
       .order('created_at', { ascending: false })
       .returns<SecretRecord[]>();
@@ -39,6 +39,7 @@ export const getAllSecrets = async (
 
         return {
           id: secret.id,
+          name: secret.name || 'Untitled Secret',
           content: decryptedContent,
           createdAt: secret.created_at,
           updatedAt: secret.updated_at
@@ -48,6 +49,7 @@ export const getAllSecrets = async (
         logError('SecretsController', `Error decrypting secret ${secret.id}: ${errorMessage}`);
         return {
           id: secret.id,
+          name: secret.name || 'Untitled Secret',
           content: '[Decryption Error]',
           createdAt: secret.created_at,
           updatedAt: secret.updated_at
@@ -83,7 +85,7 @@ export const getSecretById = async (
 
     const { data: secret, error } = await supabaseClient
       .from('secrets')
-      .select('id, encrypted_content, iv, auth_tag, created_at, updated_at')
+      .select('id, name, encrypted_content, iv, auth_tag, created_at, updated_at')
       .eq('id', secretId)
       .eq('user_id', userId)
       .single<SecretRecord>();
@@ -107,6 +109,7 @@ export const getSecretById = async (
       success: true,
       data: {
         id: secret.id,
+        name: secret.name || 'Untitled Secret',
         content: decryptedContent,
         createdAt: secret.created_at,
         updatedAt: secret.updated_at
@@ -128,7 +131,7 @@ export const createSecret = async (
 ): Promise<void> => {
   try {
     const userId = req.user.id;
-    const { content } = req.body;
+    const { name, content } = req.body;
 
     logDebug('SecretsController', `Creating new secret for user ${userId}`);
 
@@ -139,12 +142,13 @@ export const createSecret = async (
       .insert([
         {
           user_id: userId,
+          name: name || 'Untitled Secret',
           encrypted_content: encryptedContent,
           iv: iv,
           auth_tag: authTag
         }
       ])
-      .select('id, created_at, updated_at')
+      .select('id, name, created_at, updated_at')
       .single();
 
     if (error) {
@@ -162,6 +166,7 @@ export const createSecret = async (
       success: true,
       data: {
         id: newSecret.id,
+        name: newSecret.name,
         content: content,
         createdAt: newSecret.created_at,
         updatedAt: newSecret.updated_at
@@ -185,7 +190,7 @@ export const updateSecret = async (
   try {
     const userId = req.user.id;
     const secretId = req.params.id;
-    const { content } = req.body;
+    const { name, content } = req.body;
 
     logDebug('SecretsController', `Updating secret ${secretId} for user ${userId}`);
 
@@ -207,17 +212,23 @@ export const updateSecret = async (
 
     const { encryptedContent, iv, authTag } = encryptionService.encrypt(content);
 
+    const updateData: any = {
+      encrypted_content: encryptedContent,
+      iv: iv,
+      auth_tag: authTag,
+      updated_at: new Date().toISOString()
+    };
+
+    if (name !== undefined) {
+      updateData.name = name || 'Untitled Secret';
+    }
+
     const { data: updatedSecret, error: updateError } = await supabaseClient
       .from('secrets')
-      .update({
-        encrypted_content: encryptedContent,
-        iv: iv,
-        auth_tag: authTag,
-        updated_at: new Date().toISOString()
-      })
+      .update(updateData)
       .eq('id', secretId)
       .eq('user_id', userId)
-      .select('id, created_at, updated_at')
+      .select('id, name, created_at, updated_at')
       .single();
 
     if (updateError) {
@@ -235,6 +246,7 @@ export const updateSecret = async (
       success: true,
       data: {
         id: updatedSecret.id,
+        name: updatedSecret.name,
         content: content,
         createdAt: updatedSecret.created_at,
         updatedAt: updatedSecret.updated_at

@@ -7,6 +7,7 @@
  */
 export interface Secret {
   id: string;
+  name: string;
   content: string;
   createdAt: string;
   updatedAt: string;
@@ -51,6 +52,7 @@ export type ApiResponse<T> = ApiSuccessResponse<T> | ApiErrorResponse;
  * Create secret request payload
  */
 export interface CreateSecretRequest {
+  name: string;
   content: string;
 }
 
@@ -58,6 +60,7 @@ export interface CreateSecretRequest {
  * Update secret request payload
  */
 export interface UpdateSecretRequest {
+  name: string;
   content: string;
 }
 

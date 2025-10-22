@@ -26,6 +26,7 @@ export interface AuthenticatedRequest extends Request {
 export interface SecretRecord {
   id: string;
   user_id: string;
+  name: string;
   encrypted_content: string;
   iv: string;
   auth_tag: string;
@@ -38,6 +39,7 @@ export interface SecretRecord {
  */
 export interface SecretResponse {
   id: string;
+  name: string;
   content: string;
   createdAt: string;
   updatedAt: string;

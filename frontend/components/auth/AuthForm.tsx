@@ -112,15 +112,15 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
 
         {/* Error Message */}
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-            <p className="text-sm text-red-600">{error}</p>
+          <div className="mb-4 p-3 bg-gray-100 border border-gray-300 rounded-md">
+            <p className="text-sm text-black">{error}</p>
           </div>
         )}
 
         {/* Success Message */}
         {successMessage && (
-          <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-            <p className="text-sm text-green-600">{successMessage}</p>
+          <div className="mb-4 p-3 bg-gray-100 border border-gray-300 rounded-md">
+            <p className="text-sm text-black">{successMessage}</p>
           </div>
         )}
 
@@ -176,7 +176,7 @@ export const AuthForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
             <button
               type="button"
               onClick={toggleMode}
-              className="text-blue-600 hover:text-blue-700 font-medium"
+              className="text-black hover:underline font-medium"
               disabled={isLoading}
             >
               {isLogin ? 'Sign Up' : 'Sign In'}
